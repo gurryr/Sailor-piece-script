@@ -1,0 +1,6 @@
+# Sailor-piece-script
+Sailor piece script for farming works on PC and mobile            
+
+
+
+loadstring(game:HttpGet("https://pastefy.app/1r2Ce8f4/raw"))() 
