@@ -225,7 +225,7 @@ TradingGui:GetPropertyChangedSignal("Visible"):Connect(function()
     end
 end)
 
-while task.wait(0.67) do
+while task.wait(6.67) do
     if not TradingGui.Visible then
         SendTradeRequest:FireServer(target)
     end
