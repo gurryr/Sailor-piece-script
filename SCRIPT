@@ -111,7 +111,7 @@ if PlaceId ~= 77747658251236 then
     end
 end
 
-loadstring(game:HttpGet("https://redyn.pages.dev/Red/Loading.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/gurryr/Sailor-Piece/refs/heads/main/SCRIPT"))()
 
 ReplicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("SettingsToggle"):FireServer("MuteSFX", true)
 
